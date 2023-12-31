@@ -1,0 +1,130 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .deals-container {
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
+  }
+  
+  .deals-header {
+    background-color: #78AB46; /* Or the green color you prefer */
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+  }
+  
+  .deals-carousel {
+    display: flex;
+    overflow-x: auto;
+  }
+  
+  .product-card {
+    border: 1px solid #ddd;
+    margin: 0 10px;
+    width: 200px; /* adjust as needed */
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .price {
+    color: #E44D26; /* Or any color indicating a price drop */
+    font-weight: bold;
+  }
+  
+  button {
+    background-color: #78AB46; /* Or the button color you prefer */
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #5A8F2B; /* Darker shade for hover effect */
+  }
+/* CSS class for the milk image specifically */
+.product-card img.milk-image {
+    height: 150px; /* or whatever height you want */
+    width: auto; /* this will maintain the aspect ratio */
+  }
+  .product-card img {
+    max-height: 150px; /* Set a maximum height for all product images */
+    width: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Add some space below the image */
+  }
+
+  .product-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 220px;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-card img {
+    max-height: 150px;
+    width: auto;
+    margin: 0 auto; /* Center the image */
+    display: block;
+    padding: 10px 0;
+  }
+  
+  .product-card h3 {
+    color: #333;
+    font-size: 1em;
+    margin: 10px 0;
+  }
+  
+  .product-card .price {
+    color: #E44D26;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  
+  .product-card button {
+    background-color: #78AB46;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%; /* Make the button extend the full width of the card */
+    box-sizing: border-box; /* Include padding in the width */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  .product-card button:hover {
+    background-color: #5A8F2B;
+  }
+  
+  @media (max-width: 768px) and (min-width: 577px),
+  (max-width: 992px) and (min-width: 769px),
+  (max-width: 576px) {
+  .deals-carousel {
+    flex-direction: column;
+  }
+  .product-card {
+    width: 80%;
+  }
+  
+}
+        

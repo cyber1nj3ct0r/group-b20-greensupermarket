@@ -1,0 +1,404 @@
+<%@ page import="java.sql.Connection" %> <%@ page
+import="java.sql.DriverManager" %> <%@ page import="java.sql.PreparedStatement"
+%> <%@ page import="java.sql.ResultSet" %> <%@ page
+import="java.sql.SQLException" %> <%@ page import="java.io.PrintWriter" %> <%@
+page contentType="text/html;charset=UTF-8" language="java" %> <%@page
+import="runnext.User"%> <% User user = (User) session.getAttribute("logUser");
+if (user == null) { response.sendRedirect("login.jsp"); } %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cart</title>
+
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
+    />
+    <script src="https://kit.fontawesome.com/78e4720a2a.js"></script>
+
+    <style>
+      p {
+        font-family: "Rubik", sans-serif;
+      }
+
+      .formbold-btn {
+        text-align: center;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 14px 25px;
+        border: none;
+        font-weight: 500;
+        background-color: #005617;
+        color: white;
+        cursor: pointer;
+        margin-top: 25px;
+      }
+      .formbold-btn:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      h3:first-child {
+        padding-right: 50px;
+        padding-left: 20px;
+      }
+      .shop-menu ul li a.actives {
+        color: #4bcf5f;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .panel-heading {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: #00c359;
+        border-radius: 12px;
+        color: #ffffff;
+      }
+
+      .panel-body {
+        padding: 20px;
+      }
+
+      .table {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #00c359;
+        border-collapse: collapse;
+        font-family: "Rubik", sans-serif;
+      }
+      .table th {
+        background: #00c359;
+        color: #fff;
+        padding: 10px;
+        vertical-align: middle;
+        text-align: center;
+      }
+      .table td {
+        padding: 10px;
+        vertical-align: middle;
+        text-align: left;
+      }
+      .table .bottom {
+        background: #5df7a3d4;
+      }
+      .table tr td button {
+        border: none;
+        background: none;
+        font-size: 22px;
+      }
+      .table tr td button i {
+        color: #b90404;
+      }
+      .img-cart {
+        max-width: 50px;
+        max-height: 50px;
+      }
+
+      .btn-primary {
+        background-color: #5bc0de;
+        border-color: #5bc0de;
+      }
+
+      .btn-success {
+        background-color: #5cb85c;
+        border-color: #5cb85c;
+      }
+
+      .btn-default {
+        background-color: #ffffff;
+        border-color: #ccc;
+      }
+
+      .btn-default:hover,
+      .btn-default:focus {
+        background-color: #e6e6e6;
+      }
+
+      .btn-danger {
+        background-color: #d9534f;
+        border-color: #d9534f;
+      }
+
+      .btn-danger:hover,
+      .btn-danger:focus {
+        background-color: #c9302c;
+      }
+
+      .glyphicon {
+        margin-right: 5px;
+      }
+
+      ol.breadcrumb {
+        background-color: #ffffff;
+        padding: 8px 15px;
+        margin-bottom: 20px;
+        list-style: none;
+        border-radius: 4px;
+      }
+
+      .breadcrumb > li {
+        display: inline;
+        font-size: 14px;
+      }
+
+      .breadcrumb > li + li:before {
+        content: " / ";
+      }
+
+      .breadcrumb > .active {
+        color: #777777;
+      }
+
+      .pull-right {
+        float: right;
+      }
+
+      .text-right {
+        text-align: right;
+      }
+
+      .img-circle {
+        border-radius: 50%;
+      }
+
+      .img-thumbnail {
+        width: 100px;
+        height: 100px;
+      }
+
+      .content {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+ <%
+    // SQL query to retrieve cart details
+    String sqlQuery = "SELECT stores.id, stores.item, stores.volume, stores.price FROM user_cart LEFT JOIN stores ON user_cart.item_no = stores.id WHERE user_cart.email = ?";
+
+    // Email to be considered
+   
+    String userEmail = user.getEmail();
+
+	String nowUser = user.getName();
+	
+    try {
+        // Load the JDBC driver
+        Class.forName("com.mysql.jdbc.Driver");
+
+        // Establish a connection
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshop", "root", "1234");
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+
+            // Set the email parameter
+            preparedStatement.setString(1, userEmail);
+
+            // Execute the query
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+%>
+
+    <header id="header">
+      <div class="header-middle">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="logo pull-left">
+                <h1>Green Super Market</h1>
+              </div>
+            </div>
+            <div class="col">
+              <div class="shop-menu pull-right">
+                <ul class="nav navbar-nav">
+                  <li>
+                    <a href="verify.jsp">
+                      <i class="fa-solid fa-user"></i> <% out.print(nowUser);%>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="cart.jsp" class="actives">
+                      <i class="fa-solid fa-cart-plus"></i> Cart
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-bottom">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="mainmenu pull-left">
+                <ul class="nav navbar-nav collapse navbar-collapse">
+                  <li><a href="index.jsp">Home</a></li>
+
+                  <li class="dropdown">
+                    <a href="categori.jsp"
+                      >categories<i class="fa fa-angle-down"></i
+                    ></a>
+                    <ul role="menu" class="sub-menu">
+                      <li>
+                        <a href="categori.jsp#Vegetabels"
+                          >Vegetabels and fruits</a
+                        >
+                      </li>
+                      <li><a href="categori.jsp#Meet">Meat and Seafood</a></li>
+                      <li>
+                        <a href="categori.jsp#Dproducts">Dariy Products</a>
+                      </li>
+
+                      <li><a href="categori.jsp#Medicine">medicine </a></li>
+
+                      <li>
+                        <a href="categori.jsp#Liqour">Beverages Products</a>
+                      </li>
+                      <li>
+                        <a href="categori.jsp#Clean">Cleaning products </a>
+                      </li>
+                    </ul>
+                  </li>
+
+                  <li><a href="about.jsp">About</a></li>
+                  <li><a href="contact.jsp">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col">
+              <div class="search_box pull-right">
+                <input type="text" placeholder="Search" />
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container bootstrap snippets bootdey">
+      <div class="col-md-9 col-sm-8 content">
+        <div class="rows">
+          <div class="col-md-12">
+            <div class="panel panel-info panel-shadow">
+              <div class="panel-heading">
+                <h3>
+                  <img
+                    class="img-circle img-thumbnail"
+                    src="https://www.logolynx.com/images/logolynx/03/035700704195450d2a80ac8f56f70313.jpeg"
+                  />
+                </h3>
+                <h3>Welcome to here ,</h3>
+                <p>&nbsp;every items you selected store here</p>
+              </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Product No</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% float totalPrice = 0; while (resultSet.next()) { int id
+                      = resultSet.getInt("id"); String item =
+                      resultSet.getString("item"); String volume =
+                      resultSet.getString("volume"); float price =
+                      resultSet.getFloat("price"); totalPrice += price; 
+                      
+                      %>
+                      
+                      <tr>
+                        <td>00<%= id %></td>
+                        <td><%= item %></td>
+                        <td><%= volume %></td>
+                        <td>Rs.<%= String.format("%.2f", price) %></td>
+                        <td>
+                          <form method="post" action="deleteItem.jsp">
+                            <input
+                              type="hidden"
+                              name="itemId"
+                              value="<%= id %>"
+                              id="myForm"
+                            />
+                            <button onclick="redirectTo()" name="deleteButton">
+                              <i class="fa-solid fa-circle-minus"></i>
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
+                      <% } %>
+                      <tr class="bottom">
+                        <td colspan="3">Total</td>
+                        <td>Rs.<%= String.format("%.2f", totalPrice) %></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <form action="checkout" method="post">
+            <input type="hidden" value="<%= String.format("%.0f", totalPrice) %>"/>
+            <button class="formbold-btn" type="submit">Check out</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<%
+            }
+        }
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+        out.println("Error: " + e.getMessage());
+    }catch(SQLException e){
+    	e.printStackTrace();
+        out.println("Error: " + e.getMessage());
+    }
+%>
+
+    <script>
+      function redirectTo(value) {
+        var confirmed = window.confirm(
+          "Click Item delete from your cart permanently?"
+        );
+
+        // If the user confirms, update the hidden input value and submit the form
+        if (confirmed) {
+          // Update the hidden input value
+          document.getElementById("inputValue").value = value;
+
+          // Submit the form
+          document.getElementById("myForm").submit();
+        } else {
+          event.preventDefault();
+          console.log("Submission canceled by user.");
+        }
+      }
+    </script>
+  </body>
+</html>
